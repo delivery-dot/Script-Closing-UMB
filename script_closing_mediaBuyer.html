@@ -1,0 +1,332 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Script de Closing — Media Buyer & Copywriter</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,800;1,700;1,800&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,300;1,400&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  :root {
+    --bordeaux:   #5C1A1A;
+    --bordeaux-dk:#3A0E0E;
+    --sky:        #7BBFE0;
+    --sky-dk:     #3A8CB5;
+    --beige:      #F5F0EB;
+    --taupe:      #C4A99A;
+    --white:      #FFFFFF;
+    --text:       #2A0A0A;
+    --mid:        #7A5C5C;
+    --muted:      #B09090;
+    --border:     rgba(196,169,154,0.3);
+    --border2:    rgba(196,169,154,0.55);
+  }
+  html { scroll-behavior: smooth; }
+  body { background: var(--beige); color: var(--text); font-family: 'DM Sans', sans-serif; font-size: 15px; line-height: 1.7; -webkit-font-smoothing: antialiased; }
+
+  .topbar { position: sticky; top: 0; z-index: 100; background: rgba(245,240,235,0.92); backdrop-filter: blur(14px); border-bottom: 1px solid var(--border); padding: 0 2rem; height: 56px; display: flex; align-items: center; justify-content: space-between; }
+  .topbar-title { font-family: 'Playfair Display', serif; font-size: 14px; font-weight: 700; color: var(--bordeaux); }
+  .topbar-steps { display: flex; gap: 5px; }
+  .topbar-dot { width: 26px; height: 4px; border-radius: 2px; background: var(--taupe); opacity: 0.3; cursor: pointer; transition: all 0.2s; }
+  .topbar-dot.done  { background: var(--bordeaux); opacity: 0.22; }
+  .topbar-dot.active { background: var(--bordeaux); opacity: 1; }
+
+  .hero { padding: 5rem 2rem 3rem; max-width: 860px; margin: 0 auto; animation: fadeUp 0.55s ease both; }
+  .hero-badge { display: inline-flex; align-items: center; font-size: 11px; font-weight: 500; letter-spacing: 0.12em; text-transform: uppercase; color: var(--sky-dk); background: rgba(123,191,224,0.13); border: 1px solid rgba(123,191,224,0.35); padding: 5px 14px; border-radius: 20px; margin-bottom: 1.5rem; }
+  .hero h1 { font-family: 'Playfair Display', serif; font-size: clamp(36px,6vw,58px); font-weight: 800; line-height: 1.05; color: var(--bordeaux); margin-bottom: 0.5rem; }
+  .hero h1 em { font-style: italic; color: var(--sky); }
+  .hero-sub { font-size: 16px; color: var(--mid); max-width: 520px; line-height: 1.65; margin: 1rem 0 2.5rem; }
+  .hero-tags { display: flex; flex-wrap: wrap; gap: 8px; }
+  .tag { font-size: 12px; padding: 4px 13px; border-radius: 20px; border: 1px solid var(--border2); color: var(--mid); background: var(--white); }
+
+  .steps-index { max-width: 860px; margin: 0 auto 3rem; padding: 0 2rem; display: grid; grid-template-columns: repeat(auto-fit, minmax(95px, 1fr)); gap: 8px; animation: fadeUp 0.65s ease both; animation-delay: 0.08s; }
+  .step-chip { background: var(--white); border: 1px solid var(--border); border-radius: 12px; padding: 12px 8px; text-align: center; cursor: pointer; transition: all 0.18s; }
+  .step-chip:hover { border-color: var(--taupe); transform: translateY(-1px); box-shadow: 0 4px 12px rgba(92,26,26,0.07); }
+  .step-chip.active { border-color: var(--bordeaux); background: rgba(92,26,26,0.04); }
+  .step-chip-num { font-family: 'Playfair Display', serif; font-size: 18px; font-weight: 700; display: block; margin-bottom: 3px; color: var(--bordeaux); }
+  .step-chip-label { font-size: 10px; color: var(--muted); display: block; line-height: 1.3; }
+  .step-chip.active .step-chip-label { color: var(--mid); }
+
+  .main { max-width: 860px; margin: 0 auto; padding: 0 2rem 6rem; }
+  .section-panel { display: none; animation: fadeUp 0.3s ease both; }
+  .section-panel.visible { display: block; }
+  @keyframes fadeUp { from { opacity:0; transform:translateY(14px); } to { opacity:1; transform:translateY(0); } }
+
+  .section-card { background: var(--white); border: 1px solid var(--border); border-radius: 20px; overflow: hidden; margin-bottom: 1.5rem; box-shadow: 0 2px 16px rgba(92,26,26,0.05); }
+  .section-card-header { padding: 1.75rem 2rem 1.25rem; border-bottom: 1px solid var(--border); display: flex; align-items: flex-start; gap: 1rem; }
+  .step-number { font-family: 'Playfair Display', serif; font-size: 11px; font-weight: 700; letter-spacing: 0.1em; padding: 5px 13px; border-radius: 20px; flex-shrink: 0; margin-top: 3px; background: rgba(92,26,26,0.08); color: var(--bordeaux); border: 1px solid rgba(92,26,26,0.15); }
+  .step-number.sky { background: rgba(123,191,224,0.12); color: var(--sky-dk); border-color: rgba(123,191,224,0.35); }
+  .section-card-header h2 { font-family: 'Playfair Display', serif; font-size: 22px; font-weight: 700; color: var(--bordeaux); line-height: 1.2; }
+  .section-goal { font-size: 12px; color: var(--muted); margin-top: 4px; font-style: italic; }
+  .section-card-body { padding: 1.75rem 2rem; }
+
+  .speech-block { margin-bottom: 1.5rem; }
+  .block-label { font-size: 10px; font-weight: 600; letter-spacing: 0.12em; text-transform: uppercase; color: var(--taupe); margin-bottom: 8px; }
+  .speech { background: rgba(245,240,235,0.7); border-left: 3px solid var(--bordeaux); border-radius: 0 14px 14px 0; padding: 1.25rem 1.5rem; font-size: 15px; line-height: 1.8; color: var(--text); }
+  .speech strong { font-weight: 500; color: var(--bordeaux); }
+  .speech em { color: var(--sky-dk); font-style: italic; }
+
+  .note { background: rgba(123,191,224,0.07); border: 1px dashed rgba(123,191,224,0.4); border-radius: 12px; padding: 1rem 1.25rem; font-size: 13px; color: var(--mid); font-style: italic; line-height: 1.65; margin-bottom: 1.5rem; display: flex; gap: 10px; align-items: flex-start; }
+  .note-icon { color: var(--sky-dk); font-weight: 600; flex-shrink: 0; font-style: normal; }
+
+  .questions-list { list-style: none; margin-bottom: 1.5rem; }
+  .questions-list li { display: flex; gap: 12px; padding: 11px 0; border-bottom: 1px solid var(--border); font-size: 14px; color: var(--text); line-height: 1.6; align-items: flex-start; }
+  .questions-list li:last-child { border-bottom: none; }
+  .q-arrow { color: var(--bordeaux); font-weight: 700; font-size: 13px; flex-shrink: 0; margin-top: 3px; }
+
+  .phases-grid { display: grid; gap: 12px; margin-bottom: 1.5rem; }
+  .phase-card { background: var(--beige); border: 1px solid var(--border); border-radius: 14px; padding: 1.5rem; }
+  .phase-header { display: flex; align-items: center; gap: 10px; margin-bottom: 0.5rem; }
+  .phase-pill { font-size: 10px; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase; padding: 3px 11px; border-radius: 20px; }
+  .p1 { background: rgba(92,26,26,0.08); color: var(--bordeaux); border: 1px solid rgba(92,26,26,0.15); }
+  .p2 { background: rgba(123,191,224,0.12); color: var(--sky-dk); border: 1px solid rgba(123,191,224,0.3); }
+  .p3 { background: rgba(196,169,154,0.18); color: var(--mid); border: 1px solid rgba(196,169,154,0.4); }
+  .phase-name { font-family: 'Playfair Display', serif; font-size: 16px; font-weight: 700; color: var(--bordeaux); }
+  .phase-timing { font-size: 11px; color: var(--muted); margin-bottom: 1rem; font-style: italic; }
+  .phase-items { list-style: none; }
+  .phase-items li { font-size: 13px; color: var(--mid); padding: 5px 0 5px 16px; position: relative; line-height: 1.6; border-bottom: 1px solid var(--border); }
+  .phase-items li:last-child { border-bottom: none; }
+  .phase-items li::before { content: '—'; position: absolute; left: 0; color: var(--taupe); }
+
+  .guarantee-box { background: rgba(123,191,224,0.07); border: 1px solid rgba(123,191,224,0.3); border-radius: 14px; padding: 1.25rem 1.5rem; margin-bottom: 1.25rem; }
+  .guarantee-title { font-family: 'Playfair Display', serif; font-size: 13px; font-weight: 700; color: var(--sky-dk); margin-bottom: 6px; text-transform: uppercase; font-style: italic; letter-spacing: 0.03em; }
+  .guarantee-body { font-size: 13px; color: var(--mid); line-height: 1.65; }
+
+  .proof-box { background: rgba(92,26,26,0.04); border-left: 3px solid var(--taupe); border-radius: 0 12px 12px 0; padding: 1.25rem 1.5rem; font-size: 14px; color: var(--mid); font-style: italic; line-height: 1.7; margin-bottom: 1.5rem; }
+
+  .objection-list { display: grid; gap: 10px; margin-bottom: 1.5rem; }
+  .objection-card { background: var(--beige); border: 1px solid var(--border); border-radius: 12px; padding: 1.25rem; }
+  .objection-q { font-family: 'Playfair Display', serif; font-size: 13px; font-weight: 700; font-style: italic; color: var(--bordeaux); margin-bottom: 6px; }
+  .objection-a { font-size: 13px; color: var(--mid); line-height: 1.65; }
+
+  .divider { height: 1px; background: var(--border); margin: 1.5rem 0; }
+
+  .nav-footer { display: flex; justify-content: space-between; align-items: center; padding-top: 1.5rem; margin-top: 0.5rem; }
+  .nav-btn { font-family: 'DM Sans', sans-serif; font-size: 13px; font-weight: 500; padding: 11px 24px; border-radius: 10px; border: 1px solid var(--border2); background: var(--white); color: var(--text); cursor: pointer; transition: all 0.18s; }
+  .nav-btn:hover { background: var(--beige); }
+  .nav-btn.primary { background: var(--bordeaux); border-color: var(--bordeaux-dk); color: #fff; box-shadow: 0 3px 0 var(--bordeaux-dk); }
+  .nav-btn.primary:hover { opacity: 0.88; transform: translateY(1px); box-shadow: 0 2px 0 var(--bordeaux-dk); }
+  .nav-btn:disabled { opacity: 0.25; cursor: not-allowed; pointer-events: none; }
+  .nav-counter { font-size: 12px; color: var(--muted); }
+
+  @media (max-width:600px) {
+    .hero,.steps-index,.main { padding-left: 1.25rem; padding-right: 1.25rem; }
+    .hero { padding-top: 3rem; }
+    .topbar { padding: 0 1.25rem; }
+    .section-card-body,.section-card-header { padding: 1.25rem; }
+    .hero h1 { font-size: 30px; }
+    .topbar-dot { width: 18px; }
+  }
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <span class="topbar-title">Script de Closing</span>
+  <div class="topbar-steps" id="topbarDots"></div>
+</div>
+
+<div class="hero">
+  <div class="hero-badge">Media Buyer & Copywriter</div>
+  <h1>L'appel qui<br><em>signe.</em></h1>
+  <p class="hero-sub">8 étapes pour transformer un appel de découverte en collaboration signée. Adapté à ton profil d'expert en acquisition payante et copywriting.</p>
+  <div class="hero-tags">
+    <span class="tag">Durée : 45–60 min</span>
+    <span class="tag">Objectif : collaboration signée</span>
+    <span class="tag">Ton : consultant, pas vendeur</span>
+    <span class="tag">8 étapes</span>
+  </div>
+</div>
+
+<div class="steps-index" id="stepsIndex"></div>
+<div class="main" id="mainContent">
+
+  <div class="section-panel" data-step="0">
+    <div class="section-card">
+      <div class="section-card-header"><span class="step-number">01</span><div><h2>Connexion</h2><div class="section-goal">Créer une atmosphère détendue et humaine</div></div></div>
+      <div class="section-card-body">
+        <div class="speech-block"><div class="block-label">Tu dis</div><div class="speech">Salut <strong>[Prénom]</strong> ! Ravi qu'on ait enfin ce créneau. Tu viens d'où ?<br><br>Super. T'es installé au calme, t'as de quoi noter si besoin ?</div></div>
+        <div class="note"><span class="note-icon">↳</span><span>Humaniser l'appel, casser la tension d'un call "commercial". On parle d'abord, on vend après. 2 minutes suffisent.</span></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="section-panel" data-step="1">
+    <div class="section-card">
+      <div class="section-card-header"><span class="step-number">02</span><div><h2>Cadrage</h2><div class="section-goal">Poser ta posture d'expert dès les premières minutes</div></div></div>
+      <div class="section-card-body">
+        <div class="speech-block"><div class="block-label">Tu dis</div><div class="speech">Parfait <strong>[Prénom]</strong>. Voilà comment on va structurer cet échange.<br><br>D'abord, je vais te poser quelques questions pour comprendre précisément ta situation : où t'en es avec ta pub, ce qui ne marche pas, et pourquoi.<br><br>Ensuite, si je vois qu'on peut vraiment créer quelque chose de solide ensemble, je te présente exactement comment on va travailler — et ce que ça peut te rapporter concrètement.<br><br>Ça te convient ?<br><br><strong>Parfait. On démarre.</strong></div></div>
+        <div class="note"><span class="note-icon">↳</span><span>Ne parle pas de "vente" ni de "présentation d'offre". Tu mènes une <em>consultation</em>, pas un pitch. C'est toi qui décides si le client est qualifié.</span></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="section-panel" data-step="2">
+    <div class="section-card">
+      <div class="section-card-header"><span class="step-number">03</span><div><h2>Situation actuelle</h2><div class="section-goal">Explorer les douleurs business — rendre la douleur mesurable</div></div></div>
+      <div class="section-card-body">
+        <div class="speech-block"><div class="block-label">Tu ouvres avec</div><div class="speech">Dis-moi, qu'est-ce qui t'a poussé à bloquer du temps pour cet appel aujourd'hui ?</div></div>
+        <div class="note"><span class="note-icon">↳</span><span>Laisse-le parler. Puis reformule : <em>"Si je résume — tu dépenses X€/mois en pub, tu génères Y de retour, et tu sais plus quoi changer pour que ça décolle. C'est ça ?"</em></span></div>
+        <div class="block-label">Questions de creusage</div>
+        <ul class="questions-list">
+          <li><span class="q-arrow">→</span><span>T'as déjà lancé des campagnes pub ? Sur quelles plateformes — Meta, Google, TikTok ?</span></li>
+          <li><span class="q-arrow">→</span><span>Ton budget pub mensuel actuel, c'est combien environ ?</span></li>
+          <li><span class="q-arrow">→</span><span>C'est quoi ton ROAS actuel — ou ton coût par lead si t'es en génération de demande ?</span></li>
+          <li><span class="q-arrow">→</span><span>Qu'est-ce qui se passe au niveau du funnel : les gens cliquent mais n'achètent pas ? Ou les gens ne cliquent même pas ?</span></li>
+          <li><span class="q-arrow">→</span><span>T'as déjà fait appel à quelqu'un pour ça — freelance, agence ? Ce qui s'est passé ?</span></li>
+          <li><span class="q-arrow">→</span><span>Depuis combien de temps cette situation te bloque ?</span></li>
+          <li><span class="q-arrow">→</span><span>Si t'optimises rien dans les 6 prochains mois — concrètement, ça ressemble à quoi pour toi ?</span></li>
+        </ul>
+        <div class="note"><span class="note-icon">↳</span><span>Chaque euro gaspillé est une douleur. Fais-lui verbaliser le coût réel de l'inaction — c'est lui qui convainc, pas toi.</span></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="section-panel" data-step="3">
+    <div class="section-card">
+      <div class="section-card-header"><span class="step-number sky">04</span><div><h2>Situation idéale</h2><div class="section-goal">Projeter clairement l'objectif — ancrer la vision</div></div></div>
+      <div class="section-card-body">
+        <div class="speech-block"><div class="block-label">Tu dis</div><div class="speech">Maintenant, projette-toi. Dans 90 jours, si tes campagnes tournent vraiment bien — à quoi ça ressemble pour toi ?</div></div>
+        <div class="block-label">Questions de projection</div>
+        <ul class="questions-list">
+          <li><span class="q-arrow">→</span><span>C'est quoi ton ROAS cible ? Ou ton coût par lead acceptable ?</span></li>
+          <li><span class="q-arrow">→</span><span>Tu vises combien de CA mensuel additionnel grâce à la pub ?</span></li>
+          <li><span class="q-arrow">→</span><span>Pourquoi c'est urgent pour toi d'y arriver maintenant et pas dans 6 mois ?</span></li>
+          <li><span class="q-arrow">→</span><span>Concrètement, si tu atteins cet objectif, qu'est-ce que ça change dans ton business au quotidien ?</span></li>
+        </ul>
+        <div class="note"><span class="note-icon">↳</span><span>Plus il visualise précisément l'objectif, plus il sera prêt à investir pour y arriver.</span></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="section-panel" data-step="4">
+    <div class="section-card">
+      <div class="section-card-header"><span class="step-number">05</span><div><h2>Gap & Blocages</h2><div class="section-goal">Identifier ce qui manque — réutiliser dans l'offre</div></div></div>
+      <div class="section-card-body">
+        <div class="speech-block"><div class="block-label">Tu dis</div><div class="speech">T'as une vision claire de ce que tu veux atteindre. Alors, qu'est-ce qui t'empêche d'y arriver par toi-même là, maintenant ?</div></div>
+        <div class="block-label">Questions d'approfondissement</div>
+        <ul class="questions-list">
+          <li><span class="q-arrow">→</span><span>C'est quoi ton plus gros problème : les visuels, les copies, le ciblage, ou le funnel complet ?</span></li>
+          <li><span class="q-arrow">→</span><span>T'as essayé de retoucher tes textes ou tes accroches récemment ? Résultat ?</span></li>
+          <li><span class="q-arrow">→</span><span>T'as accès à tes données analytics — tu sais où tu perds les gens dans le funnel ?</span></li>
+          <li><span class="q-arrow">→</span><span>Pour être certain de réussir, de quoi t'aurais besoin exactement ?</span></li>
+        </ul>
+        <div class="note"><span class="note-icon">↳</span><span>Pose <em>"Quoi d'autre ?"</em> jusqu'à 3 fois. Note ses mots exacts — réutilise-les dans ta présentation. C'est lui qui co-construit la solution.</span></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="section-panel" data-step="5">
+    <div class="section-card">
+      <div class="section-card-header"><span class="step-number sky">06</span><div><h2>Transition</h2><div class="section-goal">Renforcer ton autorité et annoncer la solution</div></div></div>
+      <div class="section-card-body">
+        <div class="speech-block"><div class="block-label">Tu dis</div><div class="speech"><strong>[Prénom]</strong>, honnêtement — ce que tu viens de me décrire, c'est exactement le terrain sur lequel je travaille tous les jours.<br><br>Ce que tu vis — <em>[reformuler ses douleurs exactes avec ses mots]</em> — c'est pas un problème de budget ou de chance. C'est un problème de structure : les mauvaises copies, le mauvais ciblage, et un funnel qui fuit.<br><br>Je sais précisément comment corriger ça. Est-ce que tu es ok pour que je te présente comment on ferait ça ensemble ?</div></div>
+        <div class="note"><span class="note-icon">↳</span><span>Ne commence jamais la présentation sans son accord explicite. Ce "oui" micro-engage psychologiquement et transforme l'écoute passive en écoute active.</span></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="section-panel" data-step="6">
+    <div class="section-card">
+      <div class="section-card-header"><span class="step-number">07</span><div><h2>L'offre</h2><div class="section-goal">Présenter la solution en 3 phases — alignée sur ses besoins</div></div></div>
+      <div class="section-card-body">
+        <div class="note"><span class="note-icon">↳</span><span>Partage ton écran avec tes slides. Rappelle ses douleurs avant chaque phase — tu proposes une solution à <em>son</em> problème précis, pas une offre générique.</span></div>
+        <div class="phases-grid">
+          <div class="phase-card">
+            <div class="phase-header"><span class="phase-pill p1">Phase 1</span><span class="phase-name">Audit & Stratégie</span></div>
+            <div class="phase-timing">Semaine 1 · On comprend avant d'agir</div>
+            <ul class="phase-items">
+              <li>Audit complet des campagnes actuelles (Meta / Google / TikTok) : où l'argent part, pourquoi ça ne convertit pas.</li>
+              <li>Analyse des copies existantes — landing pages, ads, emails — et identification des points de friction.</li>
+              <li>Cartographie du funnel : où tu perds les prospects, à quel moment, et pourquoi.</li>
+              <li>Livrable : plan d'action priorisé avec les 3 leviers à activer en premier pour un impact immédiat.</li>
+            </ul>
+          </div>
+          <div class="phase-card">
+            <div class="phase-header"><span class="phase-pill p2">Phase 2</span><span class="phase-name">Exécution</span></div>
+            <div class="phase-timing">Semaines 2–6 · On déploie, teste et optimise</div>
+            <ul class="phase-items">
+              <li>Réécriture complète des copies : accroches, angles, CTAs — alignés sur les vrais désirs de l'audience.</li>
+              <li>Restructuration des campagnes pub : nouvelles audiences, nouveaux angles créatifs, structure A/B rigoureuse.</li>
+              <li>Optimisation hebdomadaire : analyse des données, ajustements en temps réel pour maximiser le ROAS.</li>
+              <li>Reporting transparent chaque semaine — tu sais exactement ce qui se passe et pourquoi.</li>
+            </ul>
+          </div>
+          <div class="phase-card">
+            <div class="phase-header"><span class="phase-pill p3">Phase 3</span><span class="phase-name">Scale</span></div>
+            <div class="phase-timing">Mois 2–3 · On amplifie ce qui marche</div>
+            <ul class="phase-items">
+              <li>Identification des angles et audiences winners → augmentation progressive du budget sur les campagnes rentables.</li>
+              <li>Développement de nouvelles séquences de copy : emails, retargeting, upsell — pour maximiser la valeur vie client.</li>
+              <li>Mise en place d'un système de test en continu pour maintenir la performance dans la durée.</li>
+            </ul>
+          </div>
+        </div>
+        <div class="guarantee-box">
+          <div class="guarantee-title">Garantie résultats</div>
+          <div class="guarantee-body">Si au bout de 30 jours on n'a pas identifié au moins 3 optimisations concrètes avec un impact mesurable sur tes métriques clés, tu ne dois rien pour le mois suivant.</div>
+        </div>
+        <div class="block-label">Preuve sociale — à personnaliser</div>
+        <div class="proof-box">"Pour que tu comprennes comment je travaille : [résultat concret récent — ex. 'j'ai amélioré le ROAS d'un client e-commerce de 1,8x à 4,2x en 6 semaines en retravaillant uniquement les copies et le ciblage audience']. C'est ce type d'approche que j'apporte ici."</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="section-panel" data-step="7">
+    <div class="section-card">
+      <div class="section-card-header"><span class="step-number sky">08</span><div><h2>Close</h2><div class="section-goal">Basculer vers la signature — créer l'urgence sans pression</div></div></div>
+      <div class="section-card-body">
+        <div class="speech-block"><div class="block-label">Tu dis</div><div class="speech"><strong>[Prénom]</strong>, honnêtement — ce type de collaboration, je la prends sur mesure. Je travaille avec un nombre limité de clients en même temps pour que le niveau d'attention soit là. Et aujourd'hui, au vu de ce que tu m'as partagé, t'es exactement le profil avec lequel je veux avancer.<br><br>T'as des questions sur ce que je viens de te présenter ?</div></div>
+        <div class="divider"></div>
+        <div class="block-label" style="margin-bottom:12px">Gérer les objections</div>
+        <div class="objection-list">
+          <div class="objection-card"><div class="objection-q">"C'est trop cher"</div><div class="objection-a">"Je comprends. Dis-moi : combien tu perds chaque mois avec des campagnes sous-optimales ? La question c'est pas le coût de ma collaboration — c'est le coût de l'inaction."</div></div>
+          <div class="objection-card"><div class="objection-q">"J'ai besoin d'y réfléchir"</div><div class="objection-a">"C'est normal. Sur quoi tu veux réfléchir précisément — c'est une question de budget, de timing, ou de confiance dans l'approche ?" Isole l'objection réelle.</div></div>
+          <div class="objection-card"><div class="objection-q">"J'ai déjà essayé avec quelqu'un"</div><div class="objection-a">"Je comprends la méfiance. C'est quoi qui n'a pas marché ?" [écoute] "Voilà exactement ce qu'on fera différemment dans notre collaboration."</div></div>
+        </div>
+        <div class="divider"></div>
+        <div class="speech-block"><div class="block-label">Si c'est un oui</div><div class="speech">Super <strong>[Prénom]</strong> ! Tu vas recevoir un récap de notre échange + les modalités de collaboration que tu pourras relire tranquillement.<br><br>Je peux te l'envoyer à quelle adresse mail ? Tu es sur WhatsApp ?<br><br>On cale notre prochain RDV maintenant — je commencerai par l'audit de tes campagnes actuelles. T'as accès à ton Business Manager pour me partager les données ?</div></div>
+        <div class="note"><span class="note-icon">↳</span><span>Prends les coordonnées immédiatement. Propose le prochain RDV dans la foulée. Ne laisse pas l'élan retomber.</span></div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<script>
+  const steps=[{label:"Connexion"},{label:"Cadrage"},{label:"Situation actuelle"},{label:"Situation idéale"},{label:"Gap & Blocages"},{label:"Transition"},{label:"L'offre"},{label:"Close"}];
+  const panels=document.querySelectorAll('.section-panel');
+  const idx=document.getElementById('stepsIndex');
+  const dotsEl=document.getElementById('topbarDots');
+  let cur=0;
+  steps.forEach((s,i)=>{
+    const c=document.createElement('div');
+    c.className='step-chip'+(i===0?' active':'');
+    c.innerHTML=`<span class="step-chip-num">0${i+1}</span><span class="step-chip-label">${s.label}</span>`;
+    c.onclick=()=>goTo(i);idx.appendChild(c);
+    const d=document.createElement('div');
+    d.className='topbar-dot'+(i===0?' done active':'');
+    d.onclick=()=>goTo(i);dotsEl.appendChild(d);
+  });
+  function goTo(n){
+    document.querySelectorAll('.step-chip')[cur].classList.remove('active');
+    panels[cur].classList.remove('visible');
+    cur=n;panels[cur].classList.add('visible');
+    document.querySelectorAll('.step-chip')[cur].classList.add('active');
+    document.querySelectorAll('.topbar-dot').forEach((d,i)=>{
+      d.classList.toggle('active',i===cur);d.classList.toggle('done',i<=cur);
+    });
+    document.querySelector('.nav-counter').textContent=`${cur+1} / ${steps.length}`;
+    document.getElementById('prevBtn').disabled=cur===0;
+    document.getElementById('nextBtn').disabled=cur===steps.length-1;
+    window.scrollTo({top:0,behavior:'smooth'});
+  }
+  const f=document.createElement('div');
+  f.className='nav-footer';
+  f.innerHTML='<button class="nav-btn" id="prevBtn" onclick="goTo(cur-1)" disabled>← Précédent</button><span class="nav-counter">1 / 8</span><button class="nav-btn primary" id="nextBtn" onclick="goTo(cur+1)">Suivant →</button>';
+  document.getElementById('mainContent').after(f);
+  goTo(0);
+</script>
+</body>
+</html>
